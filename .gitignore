@@ -1,2 +1,5 @@
 # Ignores virtual environments
 myenv_corrbreakdown/
+
+#Ignores IDE-specific files
+.vscode
