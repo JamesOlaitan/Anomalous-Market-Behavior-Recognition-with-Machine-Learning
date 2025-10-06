@@ -1,5 +1,79 @@
-# Ignores virtual environments
-myenv_corrbreakdown/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-#Ignores IDE-specific files
-.vscode
+# Virtual environments
+myenv_corrbreakdown/
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# Data
+data/raw/*.csv
+data/processed/*.csv
+*.duckdb
+*.duckdb.wal
+*.db
+*.sqlite
+
+# Models & Artifacts
+models/
+artifacts/
+checkpoints/
+*.pt
+*.pth
+*.h5
+*.pkl
+
+# Reports
+reports/figures/*.png
+reports/figures/*.pdf
+
+# Environment
+.env
+.env.local
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Logs
+*.log
+logs/
+
+# Mac
+.DS_Store

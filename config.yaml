@@ -1,0 +1,95 @@
+# Configuration for Anomaly Detection Project
+
+# Data
+data:
+  symbols:
+    - SPY  # S&P 500 ETF (using SPY instead of VOO for more history)
+    - XLF  # Financial sector
+    - XLK  # Technology sector
+    - VNQ  # Real Estate (REITs)
+  vix_symbol: "^VIX"
+  start_date: "2010-01-01"
+  end_date: "2024-12-31"
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+
+# Features
+features:
+  rolling_window: 60  # days for rolling correlation
+  returns_window: 1   # 1-day returns
+  volatility_window: 20  # days for volatility
+  correlation_pairs:
+    - ["SPY", "XLF"]
+    - ["SPY", "XLK"]
+    - ["SPY", "VNQ"]
+
+# Labeling (Correlation Breakdown)
+labels:
+  method: "correlation_breakdown"
+  corr_threshold: 0.1  # correlation below this
+  delta_threshold: -0.3  # change in correlation
+  delta_window: 10  # days to check delta
+  dwell_window: 5  # persist label for this many days
+
+# LSTM Model
+model:
+  hidden_size: 64
+  num_layers: 1
+  bidirectional: false
+  dropout: 0.2
+  learning_rate: 0.001
+  batch_size: 32
+  epochs: 100
+  early_stopping_patience: 10
+  pos_weight: 5.0  # for class imbalance in BCEWithLogitsLoss
+
+# Markov Smoother
+markov:
+  num_states: 2  # N (Normal), A (Anomalous)
+  # Transition matrix (if not learned)
+  # Rows: [from_N, from_A], Cols: [to_N, to_A]
+  transition_matrix:
+    - [0.97, 0.03]  # from Normal
+    - [0.15, 0.85]  # from Anomalous
+  alpha: 50.0  # Dirichlet prior concentration
+  decision_threshold: 0.7  # P(A) > threshold
+  consecutive_steps: 3  # flag if above threshold for k steps
+  dwell_steps: 0  # optional confirmation dwell
+
+# Evaluation
+evaluation:
+  anomaly_quantile: 0.99
+  metrics:
+    - precision
+    - recall
+    - f1
+    - roc_auc
+    - pr_auc
+
+# SQL
+sql:
+  database: "market.duckdb"
+  tables:
+    raw_prices: "raw_prices"
+    raw_vix: "raw_vix"
+    features: "features"
+    labels: "labels"
+    predictions: "predictions"
+
+# Paths
+paths:
+  data_dir: "data"
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  models_dir: "models"
+  artifacts_dir: "artifacts"
+  plots_dir: "artifacts/plots"
+  sql_dir: "sql"
+
+# Reproducibility
+seed: 42
+
+# Compute
+device: "auto"  # auto, cpu, cuda, mps
+
