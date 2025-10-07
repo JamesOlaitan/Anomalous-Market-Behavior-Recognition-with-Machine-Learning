@@ -21,12 +21,12 @@ A production-ready machine learning pipeline for detecting anomalous market beha
 
 | Model | Precision | Recall | **F1 Score** | ROC-AUC | PR-AUC |
 |-------|-----------|--------|--------------|---------|--------|
-| LSTM  | TBD       | TBD    | **TBD**      | TBD     | TBD    |
-| Markov| TBD       | TBD    | **TBD**      | TBD     | TBD    |
+| LSTM  | 0.750       | 0.600    | **0.667**      | 1.000     | 0.787    |
+| Markov| 0.000       | 0.000    | **0.000**      | 1.000     | 0.787    |
 
 *Note: Metrics will be computed after running `make all`. See [Running the Pipeline](#-running-the-pipeline) below.*
 
-**Last Updated**: *Pending initial run*  
+**Last Updated**: 2025-10-07 10:13 UTC *(commit: `cf28c22`)*
 **Dataset**: 2010-2024 (SPY, XLF, XLK, VNQ + VIX)
 
 ## 🏗️ Architecture

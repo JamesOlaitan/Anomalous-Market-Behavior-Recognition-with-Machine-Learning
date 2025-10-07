@@ -63,8 +63,7 @@ def load_data_from_db(conn: duckdb.DuckDBPyConnection, config: dict) -> tuple:
     train_ratio = config["data"]["train_ratio"]
     val_ratio = config["data"]["val_ratio"]
 
-    dates = df["date"].unique()
-    dates.sort()
+    dates = sorted(df["date"].unique())
 
     train_end_idx = int(len(dates) * train_ratio)
     val_end_idx = int(len(dates) * (train_ratio + val_ratio))

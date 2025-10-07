@@ -1,4 +1,5 @@
 """Ingest raw data into DuckDB database."""
+
 import duckdb
 import pandas as pd
 
@@ -19,7 +20,8 @@ def create_database_schema(conn: duckdb.DuckDBPyConnection, config: dict) -> Non
     logger.info("Creating database schema")
 
     # Raw prices table
-    conn.execute("""
+    conn.execute(
+        """
         CREATE TABLE IF NOT EXISTS raw_prices (
             date DATE,
             symbol VARCHAR,
@@ -31,18 +33,22 @@ def create_database_schema(conn: duckdb.DuckDBPyConnection, config: dict) -> Non
             volume BIGINT,
             PRIMARY KEY (date, symbol)
         )
-    """)
+    """
+    )
 
     # Raw VIX table
-    conn.execute("""
+    conn.execute(
+        """
         CREATE TABLE IF NOT EXISTS raw_vix (
             date DATE PRIMARY KEY,
             vix DOUBLE
         )
-    """)
+    """
+    )
 
     # Features table
-    conn.execute("""
+    conn.execute(
+        """
         CREATE TABLE IF NOT EXISTS features (
             date DATE,
             symbol VARCHAR,
@@ -56,20 +62,24 @@ def create_database_schema(conn: duckdb.DuckDBPyConnection, config: dict) -> Non
             vix_delta DOUBLE,
             PRIMARY KEY (date, symbol)
         )
-    """)
+    """
+    )
 
     # Labels table
-    conn.execute("""
+    conn.execute(
+        """
         CREATE TABLE IF NOT EXISTS labels (
             date DATE,
             symbol VARCHAR,
             label INTEGER,
             PRIMARY KEY (date, symbol)
         )
-    """)
+    """
+    )
 
     # Predictions table
-    conn.execute("""
+    conn.execute(
+        """
         CREATE TABLE IF NOT EXISTS predictions (
             date DATE,
             symbol VARCHAR,
@@ -79,7 +89,8 @@ def create_database_schema(conn: duckdb.DuckDBPyConnection, config: dict) -> Non
             state VARCHAR,
             PRIMARY KEY (date, symbol)
         )
-    """)
+    """
+    )
 
     logger.info("✅ Schema created successfully")
 
@@ -100,8 +111,15 @@ def ingest_prices(conn: duckdb.DuckDBPyConnection, file_path: str) -> None:
     # Delete existing data
     conn.execute("DELETE FROM raw_prices")
 
-    # Insert new data
-    conn.execute("INSERT INTO raw_prices SELECT * FROM df")
+    # Register dataframe and insert new data
+    conn.register("prices_df", df)
+    conn.execute(
+        """
+        INSERT INTO raw_prices (date, symbol, open, high, low, close, adj_close, volume)
+        SELECT date, symbol, open, high, low, close, adj_close, volume
+        FROM prices_df
+        """
+    )
 
     count = conn.execute("SELECT COUNT(*) FROM raw_prices").fetchone()[0]
     logger.info(f"Ingested {count} price records")
@@ -123,8 +141,15 @@ def ingest_vix(conn: duckdb.DuckDBPyConnection, file_path: str) -> None:
     # Delete existing data
     conn.execute("DELETE FROM raw_vix")
 
-    # Insert new data
-    conn.execute("INSERT INTO raw_vix SELECT * FROM df")
+    # Register dataframe and insert new data
+    conn.register("vix_df", df)
+    conn.execute(
+        """
+        INSERT INTO raw_vix (date, vix)
+        SELECT date, vix
+        FROM vix_df
+        """
+    )
 
     count = conn.execute("SELECT COUNT(*) FROM raw_vix").fetchone()[0]
     logger.info(f"Ingested {count} VIX records")
