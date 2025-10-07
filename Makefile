@@ -1,4 +1,4 @@
-.PHONY: help setup data features train predict eval test dashboard clean lint format
+.PHONY: help setup data features train predict eval test dashboard clean lint format update-readme
 
 help:
 	@echo "Anomalous Market Behavior Recognition - Make Targets"
@@ -9,6 +9,7 @@ help:
 	@echo "train       - Train LSTM model"
 	@echo "predict     - Generate predictions using trained model"
 	@echo "eval        - Evaluate model and compute metrics"
+	@echo "update-readme - Update README.md with computed metrics"
 	@echo "dashboard   - Launch Streamlit dashboard"
 	@echo "test        - Run all tests"
 	@echo "lint        - Run linters (flake8, mypy)"
@@ -36,6 +37,9 @@ predict:
 eval:
 	python -m src.pipelines.evaluate
 
+update-readme:
+	python update_metrics.py
+
 dashboard:
 	streamlit run src/viz/dashboard.py
 
@@ -57,6 +61,8 @@ clean:
 	find . -type f -name "*.pyo" -delete
 	find . -type f -name "*.log" -delete
 
-all: data features train predict eval
+all: data features train predict eval update-readme
 	@echo "✅ Full pipeline completed successfully!"
+	@echo "📊 Metrics have been computed and README.md has been updated."
+	@echo "💡 Run 'make dashboard' to launch the interactive visualization."
 
