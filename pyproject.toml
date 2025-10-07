@@ -50,8 +50,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["src*"]
-namespaces = false
+include = ["src", "src.*"]
 
 [tool.black]
 line-length = 100
