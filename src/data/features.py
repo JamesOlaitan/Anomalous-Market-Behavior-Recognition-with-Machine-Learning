@@ -1,4 +1,5 @@
 """Feature engineering for anomaly detection."""
+
 import duckdb
 import numpy as np
 import pandas as pd
@@ -36,9 +37,8 @@ def compute_volatility(df: pd.DataFrame, window: int = 20) -> pd.DataFrame:
     Returns:
         DataFrame with volatility
     """
-    df["volatility"] = (
-        df.groupby("symbol")["returns"]
-        .transform(lambda x: x.rolling(window, min_periods=1).std())
+    df["volatility"] = df.groupby("symbol")["returns"].transform(
+        lambda x: x.rolling(window, min_periods=1).std()
     )
     return df
 
@@ -62,9 +62,7 @@ def compute_rolling_correlation(
 
     # Ensure reference symbol exists
     if reference_symbol not in returns_pivot.columns:
-        logger.warning(
-            f"Reference symbol {reference_symbol} not found. Using first symbol."
-        )
+        logger.warning(f"Reference symbol {reference_symbol} not found. Using first symbol.")
         reference_symbol = returns_pivot.columns[0]
 
     # Compute rolling correlation with reference
@@ -100,7 +98,12 @@ def compute_z_scores(df: pd.DataFrame, column: str, window: int = 120) -> pd.Dat
     Returns:
         DataFrame with z-scores
     """
-    zscore_col = f"{column.replace('rolling_', '')}_zscore"
+    # Map column names to their z-score column names
+    zscore_mapping = {
+        "rolling_corr": "corr_zscore",
+        "volatility": "vol_zscore",
+    }
+    zscore_col = zscore_mapping.get(column, f"{column.replace('rolling_', '')}_zscore")
 
     df[zscore_col] = df.groupby("symbol")[column].transform(
         lambda x: (x - x.rolling(window, min_periods=1).mean())
@@ -201,9 +204,7 @@ def engineer_features(conn: duckdb.DuckDBPyConnection, config: dict) -> None:
     features = compute_returns(prices)
 
     logger.info("Computing volatility")
-    features = compute_volatility(
-        features, window=config["features"]["volatility_window"]
-    )
+    features = compute_volatility(features, window=config["features"]["volatility_window"])
 
     logger.info("Computing rolling correlation")
     features = compute_rolling_correlation(

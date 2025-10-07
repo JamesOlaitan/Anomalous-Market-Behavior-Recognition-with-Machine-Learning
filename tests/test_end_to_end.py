@@ -116,8 +116,8 @@ def test_end_to_end_pipeline():
     # 6. Generate predictions
     model.eval()
     with torch.no_grad():
-        X_val_seq, _ = create_dataloader(X_val, y_val, batch_size=len(X_val), shuffle=False)
-        X_batch, _ = next(iter(X_val_seq))
+        val_loader = create_dataloader(X_val, y_val, batch_size=len(X_val), shuffle=False)
+        X_batch, _ = next(iter(val_loader))
         outputs = model(X_batch)
         p_anom = torch.sigmoid(outputs).cpu().numpy().flatten()
 

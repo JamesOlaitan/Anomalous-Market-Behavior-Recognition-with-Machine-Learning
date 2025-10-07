@@ -87,17 +87,20 @@ def create_sequences(
 
     Returns:
         Tuple of (sequences, sequence_labels)
+        - sequences: shape (N, seq_length, F)
+        - sequence_labels: shape (N, seq_length, 1)
     """
     if seq_length == 1:
         # Point-wise: each sample is independent
-        return features.reshape(-1, 1, features.shape[1]), labels.reshape(-1, 1)
+        return features.reshape(-1, 1, features.shape[1]), labels.reshape(-1, 1, 1)
 
     X, y = [], []
     for i in range(len(features) - seq_length + 1):
         X.append(features[i : i + seq_length])
         y.append(labels[i : i + seq_length])
 
-    return np.array(X), np.array(y)
+    # Reshape labels to (N, seq_length, 1) to match model output
+    return np.array(X), np.array(y).reshape(-1, seq_length, 1)
 
 
 def create_dataloader(

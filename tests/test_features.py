@@ -37,6 +37,7 @@ def test_compute_returns():
 
 def test_compute_volatility():
     """Test volatility computation."""
+    np.random.seed(42)
     df = pd.DataFrame(
         {
             "symbol": ["A"] * 100,
@@ -48,18 +49,22 @@ def test_compute_volatility():
 
     assert "volatility" in result.columns
     assert not result["volatility"].isna().all()
-    assert (result["volatility"] >= 0).all()
+    # Check only non-NaN values are non-negative
+    assert (result["volatility"].dropna() >= 0).all()
 
 
 def test_compute_rolling_correlation():
     """Test rolling correlation computation."""
     # Create sample data with two symbols
+    np.random.seed(42)
     dates = pd.date_range("2020-01-01", periods=100)
+    spy_returns = np.random.randn(100) * 0.01
+    xlf_returns = np.random.randn(100) * 0.01
     df = pd.DataFrame(
         {
             "date": list(dates) * 2,
             "symbol": ["SPY"] * 100 + ["XLF"] * 100,
-            "returns": list(np.random.randn(100) * 0.01) * 2,
+            "returns": list(spy_returns) + list(xlf_returns),
         }
     )
 

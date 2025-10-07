@@ -53,12 +53,12 @@ def test_create_sequences():
     # Test with seq_length=1 (point-wise)
     X, y = create_sequences(features, labels, seq_length=1)
     assert X.shape == (100, 1, 8)
-    assert y.shape == (100, 1)
+    assert y.shape == (100, 1, 1)  # Extra dimension for compatibility with LSTM output
 
     # Test with seq_length=10
     X, y = create_sequences(features, labels, seq_length=10)
     assert X.shape == (91, 10, 8)  # 100 - 10 + 1
-    assert y.shape == (91, 10)
+    assert y.shape == (91, 10, 1)  # Extra dimension for compatibility with LSTM output
 
 
 def test_predict():
