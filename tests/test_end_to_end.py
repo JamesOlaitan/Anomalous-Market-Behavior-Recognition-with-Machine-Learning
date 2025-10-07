@@ -168,10 +168,11 @@ def test_database_operations():
         )
 
         # Insert data
-        test_df = pd.DataFrame(
+        test_data = pd.DataFrame(
             {"date": pd.date_range("2020-01-01", periods=10), "value": range(10)}
         )
-        conn.execute("INSERT INTO test_table SELECT * FROM test_df")
+        conn.register("test_data", test_data)
+        conn.execute("INSERT INTO test_table SELECT * FROM test_data")
 
         # Query data
         result = conn.execute("SELECT COUNT(*) FROM test_table").fetchone()[0]

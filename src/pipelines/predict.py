@@ -115,7 +115,7 @@ def generate_predictions(config: dict) -> None:
         )
 
         # Prepare results
-        results = pd.DataFrame(
+        predictions_df = pd.DataFrame(
             {
                 "date": df["date"],
                 "symbol": df["symbol"],
@@ -132,7 +132,8 @@ def generate_predictions(config: dict) -> None:
         # Save to database
         logger.info("Saving predictions to database")
         conn.execute("DELETE FROM predictions")
-        conn.execute("INSERT INTO predictions SELECT * FROM results")
+        conn.register("predictions_df", predictions_df)
+        conn.execute("INSERT INTO predictions SELECT * FROM predictions_df")
 
         pred_count = conn.execute("SELECT COUNT(*) FROM predictions").fetchone()[0]
         logger.info(f"✅ Saved {pred_count} prediction records to database")
