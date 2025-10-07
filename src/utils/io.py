@@ -87,4 +87,3 @@ def load_model(model: torch.nn.Module, file_path: str, device: str = "cpu") -> t
     """
     model.load_state_dict(torch.load(file_path, map_location=device))
     return model
-

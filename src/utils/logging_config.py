@@ -9,7 +9,7 @@ from typing import Optional
 def setup_logging(
     log_level: str = "INFO",
     log_file: Optional[str] = None,
-    name: Optional[str] = None
+    name: Optional[str] = None,
 ) -> logging.Logger:
     """
     Set up logging configuration.
@@ -51,7 +51,10 @@ def setup_logging(
                 "datefmt": "%Y-%m-%d %H:%M:%S",
             },
             "detailed": {
-                "format": "%(asctime)s [%(levelname)s] %(name)s (%(filename)s:%(lineno)d): %(message)s",
+                "format": (
+                    "%(asctime)s [%(levelname)s] %(name)s "
+                    "(%(filename)s:%(lineno)d): %(message)s"
+                ),
                 "datefmt": "%Y-%m-%d %H:%M:%S",
             },
         },
@@ -65,4 +68,3 @@ def setup_logging(
     logging.config.dictConfig(config)
     logger = logging.getLogger(name)
     return logger
-

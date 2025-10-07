@@ -1,7 +1,6 @@
 """Tests for feature engineering."""
 import numpy as np
 import pandas as pd
-import pytest
 
 from src.data.features import (
     compute_returns,
@@ -133,5 +132,5 @@ def test_feature_pipeline_integration():
         assert col in df.columns
 
     # Check no infinite values
-    assert not np.isinf(df[expected_cols].select_dtypes(include=[np.number])).any().any()
-
+    numeric_df = df[expected_cols].select_dtypes(include=[np.number])
+    assert not np.isinf(numeric_df).any().any()

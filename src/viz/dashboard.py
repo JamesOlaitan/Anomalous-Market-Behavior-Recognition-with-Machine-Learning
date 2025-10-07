@@ -301,9 +301,12 @@ def main():
 
     # Footer
     st.markdown("---")
-    st.caption("Anomalous Market Behavior Recognition with Machine Learning | PyTorch + DuckDB + Streamlit")
+    caption_text = (
+        "Anomalous Market Behavior Recognition with Machine Learning | "
+        "PyTorch + DuckDB + Streamlit"
+    )
+    st.caption(caption_text)
 
 
 if __name__ == "__main__":
     main()
-

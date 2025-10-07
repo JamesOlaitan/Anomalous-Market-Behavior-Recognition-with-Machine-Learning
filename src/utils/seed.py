@@ -28,4 +28,3 @@ def set_seeds(seed: int = 42) -> None:
 
     # Set environment variable for Python hash seed
     os.environ["PYTHONHASHSEED"] = str(seed)
-

@@ -62,4 +62,3 @@ def get_device(config: Dict[str, Any]) -> str:
             return "cpu"
     else:
         return device_config
-

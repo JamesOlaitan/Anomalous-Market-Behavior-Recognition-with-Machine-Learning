@@ -1,6 +1,4 @@
 """Feature engineering for anomaly detection."""
-import logging
-
 import duckdb
 import numpy as np
 import pandas as pd
@@ -254,19 +252,19 @@ def engineer_features(conn: duckdb.DuckDBPyConnection, config: dict) -> None:
         "vix",
         "vix_delta",
     ]
-    features_df = features[features_cols]
+    features_subset = features[features_cols]
 
     # Select columns for labels table
-    labels_df = features[["date", "symbol", "label"]]
+    labels_subset = features[["date", "symbol", "label"]]
 
     # Save to database
     logger.info("Saving features to database")
     conn.execute("DELETE FROM features")
-    conn.execute("INSERT INTO features SELECT * FROM features_df")
+    conn.execute("INSERT INTO features SELECT * FROM features_subset")
 
     logger.info("Saving labels to database")
     conn.execute("DELETE FROM labels")
-    conn.execute("INSERT INTO labels SELECT * FROM labels_df")
+    conn.execute("INSERT INTO labels SELECT * FROM labels_subset")
 
     feature_count = conn.execute("SELECT COUNT(*) FROM features").fetchone()[0]
     label_count = conn.execute("SELECT COUNT(*) FROM labels").fetchone()[0]
@@ -292,4 +290,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

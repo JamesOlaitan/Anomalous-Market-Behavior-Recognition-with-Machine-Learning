@@ -1,6 +1,4 @@
 """Ingest raw data into DuckDB database."""
-import logging
-
 import duckdb
 import pandas as pd
 
@@ -158,4 +156,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

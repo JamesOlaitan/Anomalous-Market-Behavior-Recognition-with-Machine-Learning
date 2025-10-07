@@ -1,6 +1,5 @@
 """Tests for LSTM model."""
 import numpy as np
-import pytest
 import torch
 
 from src.models.lstm import AnomalyLSTM, create_sequences, predict
@@ -122,4 +121,3 @@ def test_lstm_output_shapes_batch():
         with torch.no_grad():
             output = model(x)
         assert output.shape == (batch_size, 1, 1)
-

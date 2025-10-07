@@ -1,15 +1,11 @@
 """Training pipeline for LSTM anomaly detection model."""
-import logging
 import os
 
 import duckdb
-import numpy as np
-import pandas as pd
 import torch
 import torch.nn as nn
 from sklearn.metrics import precision_recall_auc_score, roc_auc_score
 from sklearn.preprocessing import StandardScaler
-from tqdm import tqdm
 
 from src.models.lstm import (
     AnomalyLSTM,
@@ -138,7 +134,7 @@ def train_model(config: dict) -> None:
 
     try:
         # Load data
-        train_data, val_data, test_data, scaler = load_data_from_db(conn, config)
+        train_data, val_data, _test_data, scaler = load_data_from_db(conn, config)
         X_train, y_train, _ = train_data
         X_val, y_val, _ = val_data
 
@@ -274,4 +270,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

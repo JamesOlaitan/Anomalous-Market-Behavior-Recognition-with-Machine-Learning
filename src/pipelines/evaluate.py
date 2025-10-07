@@ -1,5 +1,4 @@
 """Evaluation pipeline to compute metrics and generate plots."""
-import logging
 import os
 from datetime import datetime
 
@@ -274,8 +273,12 @@ def evaluate_model(config: dict) -> None:
         )
 
         # Confusion matrices
-        plot_confusion_matrix(y_true, y_pred_lstm, f"{plots_dir}/confusion_matrix_lstm.png")
-        plot_confusion_matrix(y_true, y_pred_markov, f"{plots_dir}/confusion_matrix_markov.png")
+        plot_confusion_matrix(
+            y_true, y_pred_lstm, f"{plots_dir}/confusion_matrix_lstm.png"
+        )
+        plot_confusion_matrix(
+            y_true, y_pred_markov, f"{plots_dir}/confusion_matrix_markov.png"
+        )
 
         # Time series (use a subset for clarity)
         df_subset = df.head(1000)  # First 1000 samples
@@ -315,4 +318,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

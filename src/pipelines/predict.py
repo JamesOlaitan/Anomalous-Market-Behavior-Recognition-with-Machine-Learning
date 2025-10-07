@@ -1,13 +1,9 @@
 """Prediction pipeline to generate and save anomaly scores."""
-import logging
-
 import duckdb
-import numpy as np
 import pandas as pd
 import torch
 
 from src.models.lstm import AnomalyLSTM, predict
-from src.models.markov_smoother import MarkovSmoother
 from src.utils.config import get_device, load_config
 from src.utils.io import load_json, load_pickle
 from src.utils.logging_config import setup_logging
@@ -72,7 +68,7 @@ def generate_predictions(config: dict) -> None:
     logger.info(f"Using device: {device}")
 
     # Load model and smoother
-    model, scaler, smoother, model_config = load_trained_model(config, device)
+    model, scaler, smoother, _model_config = load_trained_model(config, device)
 
     # Connect to database
     db_path = config["sql"]["database"]
@@ -111,7 +107,7 @@ def generate_predictions(config: dict) -> None:
         # Apply Markov smoother
         logger.info("Applying Markov smoother")
         markov_config = config["markov"]
-        posteriors, state_seq, anomaly_flags = smoother.forward(
+        posteriors, state_seq, _anomaly_flags = smoother.forward(
             p_anom,
             tau=markov_config["decision_threshold"],
             k=markov_config["consecutive_steps"],
@@ -125,7 +121,10 @@ def generate_predictions(config: dict) -> None:
                 "symbol": df["symbol"],
                 "p_anom": p_anom,
                 "post_normal": posteriors[:, 0],
-                "post_anomalous": posteriors[:, 1] if posteriors.shape[1] > 1 else posteriors[:, 0],
+                "post_anomalous": (
+                    posteriors[:, 1] if posteriors.shape[1] > 1
+                    else posteriors[:, 0]
+                ),
                 "state": [smoother.get_state_name(s) for s in state_seq],
             }
         )
@@ -140,10 +139,8 @@ def generate_predictions(config: dict) -> None:
 
         # Summary statistics
         anomaly_ratio_lstm = (p_anom > 0.5).mean()
-        anomaly_ratio_markov = anomaly_flags.mean()
 
         logger.info(f"LSTM anomaly ratio (p > 0.5): {anomaly_ratio_lstm:.2%}")
-        logger.info(f"Markov anomaly ratio (flagged): {anomaly_ratio_markov:.2%}")
 
     finally:
         conn.close()
@@ -157,4 +154,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

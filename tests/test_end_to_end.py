@@ -5,7 +5,6 @@ import tempfile
 import duckdb
 import numpy as np
 import pandas as pd
-import pytest
 import torch
 
 from src.data.features import (
@@ -76,8 +75,9 @@ def test_end_to_end_pipeline():
     assert len(features) > 0, "No features after preprocessing"
 
     # 3. Create synthetic labels (correlation breakdown)
+    vol_threshold = features["volatility"].quantile(0.8)
     features["label"] = (
-        (features["rolling_corr"] < 0.2) & (features["volatility"] > features["volatility"].quantile(0.8))
+        (features["rolling_corr"] < 0.2) & (features["volatility"] > vol_threshold)
     ).astype(int)
 
     # 4. Prepare data for training
@@ -168,14 +168,13 @@ def test_database_operations():
         )
 
         # Insert data
-        df = pd.DataFrame(
+        test_df = pd.DataFrame(
             {"date": pd.date_range("2020-01-01", periods=10), "value": range(10)}
         )
-        conn.execute("INSERT INTO test_table SELECT * FROM df")
+        conn.execute("INSERT INTO test_table SELECT * FROM test_df")
 
         # Query data
         result = conn.execute("SELECT COUNT(*) FROM test_table").fetchone()[0]
         assert result == 10
 
         conn.close()
-

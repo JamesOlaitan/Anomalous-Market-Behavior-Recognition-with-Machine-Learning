@@ -1,6 +1,4 @@
 """Download financial data from Yahoo Finance."""
-import logging
-from datetime import datetime
 from typing import List
 
 import pandas as pd
@@ -127,7 +125,6 @@ def main():
 
     # Extract config
     symbols = config["data"]["symbols"]
-    vix_symbol = config["data"]["vix_symbol"]
     start_date = config["data"]["start_date"]
     end_date = config["data"]["end_date"]
     raw_dir = config["paths"]["raw_dir"]
@@ -155,4 +152,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

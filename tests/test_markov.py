@@ -1,6 +1,5 @@
 """Tests for Markov smoother."""
 import numpy as np
-import pytest
 
 from src.models.markov_smoother import MarkovSmoother
 
@@ -156,4 +155,3 @@ def test_markov_custom_transition_matrix():
     smoother = MarkovSmoother(states=("N", "A"), T=T_custom)
 
     assert np.allclose(smoother.T, T_custom)
-
