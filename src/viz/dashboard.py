@@ -1,4 +1,5 @@
 """Interactive Streamlit dashboard for anomaly detection."""
+
 import json
 import os
 
@@ -218,8 +219,7 @@ def main():
 
     # Filter data by date
     df_filtered = df[
-        (df["date"] >= pd.Timestamp(date_range[0]))
-        & (df["date"] <= pd.Timestamp(date_range[1]))
+        (df["date"] >= pd.Timestamp(date_range[0])) & (df["date"] <= pd.Timestamp(date_range[1]))
     ]
 
     # Metrics summary
@@ -272,13 +272,12 @@ def main():
     if len(anomalies_markov) > 0:
         st.subheader("Anomaly Events (Markov)")
         display_cols = ["date", "close", "rolling_corr", "vix", "p_anom", "post_anomalous", "label"]
-        st.dataframe(
-            anomalies_markov[display_cols].sort_values("date", ascending=False).head(20)
-        )
+        st.dataframe(anomalies_markov[display_cols].sort_values("date", ascending=False).head(20))
 
     # Data dictionary
     with st.expander("📖 Data Dictionary"):
-        st.markdown("""
+        st.markdown(
+            """
         **Columns:**
         - **date**: Trading date
         - **symbol**: Stock/ETF symbol
@@ -297,7 +296,8 @@ def main():
         2-state Hidden Markov Model (HMM-lite) with states Normal (N) and Anomalous (A).
         The transition matrix encodes persistence in each state, reducing false positives
         from noisy LSTM predictions.
-        """)
+        """
+        )
 
     # Footer
     st.markdown("---")

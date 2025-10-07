@@ -1,4 +1,5 @@
 """Prediction pipeline to generate and save anomaly scores."""
+
 import duckdb
 import pandas as pd
 import torch
@@ -122,8 +123,7 @@ def generate_predictions(config: dict) -> None:
                 "p_anom": p_anom,
                 "post_normal": posteriors[:, 0],
                 "post_anomalous": (
-                    posteriors[:, 1] if posteriors.shape[1] > 1
-                    else posteriors[:, 0]
+                    posteriors[:, 1] if posteriors.shape[1] > 1 else posteriors[:, 0]
                 ),
                 "state": [smoother.get_state_name(s) for s in state_seq],
             }

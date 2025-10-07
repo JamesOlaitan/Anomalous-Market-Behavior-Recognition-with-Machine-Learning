@@ -1,4 +1,5 @@
 """Training pipeline for LSTM anomaly detection model."""
+
 import os
 
 import duckdb
@@ -22,9 +23,7 @@ from src.utils.seed import set_seeds
 logger = setup_logging(name=__name__)
 
 
-def load_data_from_db(
-    conn: duckdb.DuckDBPyConnection, config: dict
-) -> tuple:
+def load_data_from_db(conn: duckdb.DuckDBPyConnection, config: dict) -> tuple:
     """
     Load features and labels from database and split into train/val/test.
 
@@ -154,18 +153,14 @@ def train_model(config: dict) -> None:
         ).to(device)
 
         logger.info(f"Model architecture:\n{model}")
-        logger.info(
-            f"Total parameters: {sum(p.numel() for p in model.parameters()):,}"
-        )
+        logger.info(f"Total parameters: {sum(p.numel() for p in model.parameters()):,}")
 
         # Loss function with class imbalance handling
         pos_weight = torch.tensor([config["model"]["pos_weight"]]).to(device)
         criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
 
         # Optimizer
-        optimizer = torch.optim.Adam(
-            model.parameters(), lr=config["model"]["learning_rate"]
-        )
+        optimizer = torch.optim.Adam(model.parameters(), lr=config["model"]["learning_rate"])
 
         # Training loop
         epochs = config["model"]["epochs"]
@@ -183,15 +178,11 @@ def train_model(config: dict) -> None:
             train_loss = train_epoch(model, train_loader, criterion, optimizer, device)
 
             # Validate
-            val_loss, val_preds, val_labels = evaluate_model(
-                model, val_loader, criterion, device
-            )
+            val_loss, val_preds, val_labels = evaluate_model(model, val_loader, criterion, device)
 
             # Compute metrics
             val_auc = roc_auc_score(val_labels.flatten(), val_preds.flatten())
-            val_pr_auc = precision_recall_auc_score(
-                val_labels.flatten(), val_preds.flatten()
-            )
+            val_pr_auc = precision_recall_auc_score(val_labels.flatten(), val_preds.flatten())
 
             logger.info(
                 f"Epoch {epoch+1}/{epochs} - "
@@ -210,9 +201,7 @@ def train_model(config: dict) -> None:
             else:
                 patience_counter += 1
                 if patience_counter >= patience:
-                    logger.info(
-                        f"Early stopping triggered after {epoch+1} epochs"
-                    )
+                    logger.info(f"Early stopping triggered after {epoch+1} epochs")
                     break
 
         # Load best model
@@ -243,7 +232,7 @@ def train_model(config: dict) -> None:
 
         markov_config = config["markov"]
         smoother = MarkovSmoother(
-            states=tuple(["N", "A"][:markov_config["num_states"]]),
+            states=tuple(["N", "A"][: markov_config["num_states"]]),
             T=markov_config.get("transition_matrix"),
             alpha=markov_config["alpha"],
         )

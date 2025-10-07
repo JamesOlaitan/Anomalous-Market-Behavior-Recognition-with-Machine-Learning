@@ -1,4 +1,5 @@
 """Tests for Markov smoother."""
+
 import numpy as np
 
 from src.models.markov_smoother import MarkovSmoother

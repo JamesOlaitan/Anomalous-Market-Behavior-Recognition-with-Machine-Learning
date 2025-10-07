@@ -1,4 +1,5 @@
 """Logging configuration utilities."""
+
 import logging
 import logging.config
 import sys
@@ -52,8 +53,7 @@ def setup_logging(
             },
             "detailed": {
                 "format": (
-                    "%(asctime)s [%(levelname)s] %(name)s "
-                    "(%(filename)s:%(lineno)d): %(message)s"
+                    "%(asctime)s [%(levelname)s] %(name)s " "(%(filename)s:%(lineno)d): %(message)s"
                 ),
                 "datefmt": "%Y-%m-%d %H:%M:%S",
             },

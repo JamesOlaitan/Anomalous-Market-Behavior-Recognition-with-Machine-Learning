@@ -1,4 +1,5 @@
 """Tests for LSTM model."""
+
 import numpy as np
 import torch
 
@@ -34,9 +35,7 @@ def test_lstm_forward_pass():
 
 def test_lstm_bidirectional():
     """Test bidirectional LSTM."""
-    model = AnomalyLSTM(
-        input_size=8, hidden_size=32, num_layers=1, bidirectional=True
-    )
+    model = AnomalyLSTM(input_size=8, hidden_size=32, num_layers=1, bidirectional=True)
 
     x = torch.randn(2, 5, 8)
 

@@ -1,4 +1,5 @@
 """Evaluation pipeline to compute metrics and generate plots."""
+
 import os
 from datetime import datetime
 
@@ -101,9 +102,7 @@ def plot_roc_curve(y_true: np.ndarray, y_scores: np.ndarray, save_path: str) -> 
     logger.info(f"Saved ROC curve to {save_path}")
 
 
-def plot_precision_recall_curve(
-    y_true: np.ndarray, y_scores: np.ndarray, save_path: str
-) -> None:
+def plot_precision_recall_curve(y_true: np.ndarray, y_scores: np.ndarray, save_path: str) -> None:
     """
     Plot Precision-Recall curve.
 
@@ -127,9 +126,7 @@ def plot_precision_recall_curve(
     logger.info(f"Saved PR curve to {save_path}")
 
 
-def plot_confusion_matrix(
-    y_true: np.ndarray, y_pred: np.ndarray, save_path: str
-) -> None:
+def plot_confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, save_path: str) -> None:
     """
     Plot confusion matrix.
 
@@ -265,20 +262,12 @@ def evaluate_model(config: dict) -> None:
         plot_roc_curve(y_true, y_scores_markov, f"{plots_dir}/roc_curve_markov.png")
 
         # PR curves
-        plot_precision_recall_curve(
-            y_true, y_scores_lstm, f"{plots_dir}/pr_curve_lstm.png"
-        )
-        plot_precision_recall_curve(
-            y_true, y_scores_markov, f"{plots_dir}/pr_curve_markov.png"
-        )
+        plot_precision_recall_curve(y_true, y_scores_lstm, f"{plots_dir}/pr_curve_lstm.png")
+        plot_precision_recall_curve(y_true, y_scores_markov, f"{plots_dir}/pr_curve_markov.png")
 
         # Confusion matrices
-        plot_confusion_matrix(
-            y_true, y_pred_lstm, f"{plots_dir}/confusion_matrix_lstm.png"
-        )
-        plot_confusion_matrix(
-            y_true, y_pred_markov, f"{plots_dir}/confusion_matrix_markov.png"
-        )
+        plot_confusion_matrix(y_true, y_pred_lstm, f"{plots_dir}/confusion_matrix_lstm.png")
+        plot_confusion_matrix(y_true, y_pred_markov, f"{plots_dir}/confusion_matrix_markov.png")
 
         # Time series (use a subset for clarity)
         df_subset = df.head(1000)  # First 1000 samples
