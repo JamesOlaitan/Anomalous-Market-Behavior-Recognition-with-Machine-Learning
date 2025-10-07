@@ -48,13 +48,15 @@ data/processed/*.csv
 *.db
 *.sqlite
 
-# Models & Artifacts
-models/
+# Models & Artifacts (trained model files, NOT source code)
+/models/
 artifacts/
 checkpoints/
 *.pt
 *.pth
 *.h5
+# IMPORTANT: Allow src/models/ (Python source code)
+!src/models/
 *.pkl
 
 # Reports
