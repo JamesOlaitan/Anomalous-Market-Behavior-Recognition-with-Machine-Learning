@@ -49,8 +49,9 @@ jobs:
         isort --check-only --profile black src/ tests/
 
     - name: Run tests with pytest
+      env:
+        PYTHONPATH: ${{ github.workspace }}
       run: |
-        export PYTHONPATH=.
         pytest tests/ -v --cov=src --cov-report=xml --cov-report=term
 
     - name: Upload coverage to Codecov
@@ -87,12 +88,13 @@ jobs:
         pip install -e .
 
     - name: Check imports
+      env:
+        PYTHONPATH: ${{ github.workspace }}
       run: |
+        python smoke_test_imports.py
         python -c "from src.data.download import main"
         python -c "from src.pipelines.train import main"
         python -c "from src.pipelines.evaluate import main"
-        python -c "from src.models.lstm import AnomalyLSTM"
-        python -c "from src.models.markov_smoother import MarkovSmoother"
 
     - name: Validate config
       run: |
