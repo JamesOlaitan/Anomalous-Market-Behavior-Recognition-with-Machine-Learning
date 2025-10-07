@@ -5,7 +5,7 @@ import os
 import duckdb
 import torch
 import torch.nn as nn
-from sklearn.metrics import precision_recall_auc_score, roc_auc_score
+from sklearn.metrics import average_precision_score, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 
 from src.models.lstm import (
@@ -182,7 +182,7 @@ def train_model(config: dict) -> None:
 
             # Compute metrics
             val_auc = roc_auc_score(val_labels.flatten(), val_preds.flatten())
-            val_pr_auc = precision_recall_auc_score(val_labels.flatten(), val_preds.flatten())
+            val_pr_auc = average_precision_score(val_labels.flatten(), val_preds.flatten())
 
             logger.info(
                 f"Epoch {epoch+1}/{epochs} - "
